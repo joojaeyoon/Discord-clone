@@ -2,22 +2,18 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo from "../discord-logo.png";
 import useSocket from "use-socket.io-client";
-import { useImmer } from "use-immer";
 
 const Chats = () => {
   let input;
 
-  const [chats, setChats] = useImmer([]);
+  const [chats, setChats] = useState([]);
   const [socket] = useSocket("http://localhost:3000");
 
   socket.connect();
 
   useEffect(() => {
     socket.on("chat message", (user, msg) => {
-      setChats(draft => {
-        draft.push([user, msg]);
-        console.log(chats);
-      });
+      setChats([...chats, [user, msg]]);
     });
   });
 

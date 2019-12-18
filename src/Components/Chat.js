@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo from "../discord-logo.png";
+import useSocket from "use-socket.io-client";
 
 const Chat = () => {
+  let input;
+
+  const [socket] = useSocket("http://localhost:3000");
+
+  socket.connect();
+
+  useEffect(() => {
+    socket.on("chat message", msg => {
+      console.log(msg);
+    });
+  });
+
   return (
     <MainDiv>
       <ChatMenu>Chat Menu</ChatMenu>
@@ -10,11 +23,28 @@ const Chat = () => {
         <ChatDiv>
           <img src={logo} className="App-logo" alt="logo" />
         </ChatDiv>
-        <ChatInput placeholder="Send Message" />
+        <ChatForm
+          onSubmit={e => {
+            e.preventDefault();
+            socket.emit("chat message", input.value);
+            input.value = "";
+          }}
+        >
+          <ChatInput
+            ref={ref => {
+              input = ref;
+            }}
+            placeholder="Send Message"
+          />
+        </ChatForm>
       </InnerDiv>
     </MainDiv>
   );
 };
+
+const ChatForm = styled.form`
+  height: 10%;
+`;
 
 const ChatInput = styled.input`
   background-color: #40444b;
@@ -23,7 +53,9 @@ const ChatInput = styled.input`
   margin-bottom: 5%;
   border-style: none;
   width: 90%;
-  height: 6%;
+  min-height: 5vh;
+  color: white;
+  text-indent: 1vh;
 `;
 
 const ChatDiv = styled.div`

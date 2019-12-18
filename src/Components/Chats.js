@@ -2,19 +2,30 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo from "../discord-logo.png";
 import useSocket from "use-socket.io-client";
+import { useImmer } from "use-immer";
 
-const Chat = () => {
+const Chats = () => {
   let input;
 
+  const [chats, setChats] = useImmer([]);
   const [socket] = useSocket("http://localhost:3000");
 
   socket.connect();
 
   useEffect(() => {
-    socket.on("chat message", msg => {
-      console.log(msg);
+    socket.on("chat message", (user, msg) => {
+      setChats(draft => {
+        draft.push([user, msg]);
+        console.log(chats);
+      });
     });
   });
+
+  const Chats = chats.map(chat => (
+    <div>
+      {chat[0]}: {chat[1]}
+    </div>
+  ));
 
   return (
     <MainDiv>
@@ -22,6 +33,7 @@ const Chat = () => {
       <InnerDiv>
         <ChatDiv>
           <img src={logo} className="App-logo" alt="logo" />
+          {Chats}
         </ChatDiv>
         <ChatForm
           onSubmit={e => {
@@ -87,4 +99,4 @@ const MainDiv = styled.div`
   font-size: calc(10px + 2vmin);
 `;
 
-export default Chat;
+export default Chats;

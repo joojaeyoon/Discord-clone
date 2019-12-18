@@ -1,6 +1,6 @@
 import React from "react";
 
-import Chat from "./Chat";
+import Chats from "./Chats";
 import ChannelList from "./ChannelList";
 import UserList from "./UserList";
 import styled from "styled-components";
@@ -9,7 +9,7 @@ const Channel = () => {
   return (
     <ChannelDiv className="Channel">
       <ChannelList />
-      <Chat />
+      <Chats />
       <UserList />
     </ChannelDiv>
   );

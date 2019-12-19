@@ -91,7 +91,7 @@ const ChatInput = styled.input`
 
 const ChatDiv = styled.div`
   height: 90%;
-  overflow-y: auto;
+  overflow-y: hidden;
 `;
 
 const ChatMenu = styled.div`

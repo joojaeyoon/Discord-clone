@@ -1,54 +1,77 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import logo from "../discord-logo.png";
-import useSocket from "use-socket.io-client";
+import socket from "socket.io-client";
+import ScrollToBottom from "react-scroll-to-bottom";
 
-const Chats = () => {
-  let input;
+import "./Chats.css";
 
-  const [chats, setChats] = useState([]);
-  const [socket] = useSocket("http://localhost:3000");
-
-  socket.connect();
-
-  useEffect(() => {
-    socket.on("chat message", (user, msg) => {
-      setChats([...chats, [user, msg]]);
-    });
-  });
-
-  const Chats = chats.map(chat => (
-    <div>
-      {chat[0]}: {chat[1]}
+const Chat = ({ username, chats }) => {
+  return chats.map((chat, index) => (
+    <div key={index}>
+      {username}: {chat}
     </div>
   ));
-
-  return (
-    <MainDiv>
-      <ChatMenu>Chat Menu</ChatMenu>
-      <InnerDiv>
-        <ChatDiv>
-          <img src={logo} className="App-logo" alt="logo" />
-          {Chats}
-        </ChatDiv>
-        <ChatForm
-          onSubmit={e => {
-            e.preventDefault();
-            socket.emit("chat message", input.value);
-            input.value = "";
-          }}
-        >
-          <ChatInput
-            ref={ref => {
-              input = ref;
-            }}
-            placeholder="Send Message"
-          />
-        </ChatForm>
-      </InnerDiv>
-    </MainDiv>
-  );
 };
+
+class Chats extends React.Component {
+  state = {
+    chats: []
+  };
+
+  constructor(props) {
+    super(props);
+
+    const { username } = this.props;
+
+    this.socket = socket.connect("http://localhost:8080");
+
+    this.socket.emit("username", username);
+
+    this.socket.on("message", (user, msg) => {
+      this.addMessage(user, msg);
+      console.log(this.state.chats);
+    });
+  }
+
+  addMessage = msg => {
+    const { chats } = this.state;
+    this.setState({
+      chats: [...chats, msg]
+    });
+  };
+
+  render() {
+    let input;
+    const { username } = this.props;
+
+    return (
+      <MainDiv>
+        <ChatMenu>Chat Menu</ChatMenu>
+        <InnerDiv>
+          <ChatDiv>
+            <ScrollToBottom className="Scroll">
+              <Chat username={username} chats={this.state.chats} />
+            </ScrollToBottom>
+          </ChatDiv>
+          <ChatForm
+            onSubmit={e => {
+              e.preventDefault();
+              this.socket.emit("message", input.value);
+              input.value = "";
+            }}
+          >
+            <ChatInput
+              ref={ref => {
+                input = ref;
+              }}
+              placeholder="Send Message"
+            />
+          </ChatForm>
+        </InnerDiv>
+      </MainDiv>
+    );
+  }
+}
 
 const ChatForm = styled.form`
   height: 10%;
@@ -68,6 +91,7 @@ const ChatInput = styled.input`
 
 const ChatDiv = styled.div`
   height: 90%;
+  overflow-y: auto;
 `;
 
 const ChatMenu = styled.div`

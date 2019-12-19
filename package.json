@@ -11,8 +11,8 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
-    "socket.io": "^2.3.0",
-    "use-socket.io-client": "^1.0.4"
+    "react-scroll-to-bottom": "^2.0.0-master.f19b14d",
+    "socket.io": "^2.3.0"
   },
   "scripts": {
     "react-start": "react-scripts start",

@@ -38,6 +38,7 @@ const MenubarDiv = styled.div`
 const MenulineDiv = styled.div`
   font-weight: 500;
   font-size: 30px;
+
   margin-bottom: 3vh;
 `;
 export default Menubar;

@@ -1,42 +1,92 @@
-import React, { useState, useRef } from "react";
+import React from "react";
+import styled from "styled-components";
+import socket from "socket.io-client";
 
 import Chats from "./Chats";
 import ChannelList from "./ChannelList";
 import UserList from "./UserList";
-import styled from "styled-components";
 
-const Channel = () => {
-  const input = useRef();
-  const [username, setUsername] = useState("");
+class Channel extends React.Component {
+  state = {
+    users: [],
+    chats: [{ user: "joo", text: "test" }],
+    username: ""
+  };
 
-  return username === "" ? (
-    <NameDiv>
-      <div style={{ margin: "5vh" }}>Enter Channel</div>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          setUsername(input.current.value);
-        }}
-      >
-        <NameInput ref={input} placeholder="your name" />
-        <div>
-          <NameButton>Enter</NameButton>
-        </div>
-      </form>
-    </NameDiv>
-  ) : (
-    <ChannelDiv>
-      <ChannelList />
-      <Chats username={username} />
-      <UserList />
-    </ChannelDiv>
-  );
-};
+  constructor(props) {
+    super(props);
+
+    this.socket = socket.connect("http://localhost:8080");
+
+    this.socket.on("message", (user, msg, date) => {
+      this.addMessage(user, msg, date);
+    });
+  }
+
+  addMessage = (user, msg, date) => {
+    const { chats } = this.state;
+    this.setState({
+      chats: [...chats, { user: user, text: msg, date: date }]
+    });
+  };
+
+  sendMessage = (user, msg) => {
+    const date = Date();
+    this.socket.emit("message", user, msg);
+
+    this.addMessage(user, msg, date);
+  };
+
+  setUsername = name => {
+    this.setState({
+      username: name
+    });
+    this.socket.emit("username", name);
+  };
+
+  render() {
+    let input;
+    const { username, chats } = this.state;
+
+    return username === "" ? (
+      <NameDiv>
+        <div style={{ margin: "5vh" }}>Enter Channel</div>
+        <form
+          onSubmit={e => {
+            e.preventDefault();
+            this.setUsername(input.value);
+          }}
+        >
+          <NameInput
+            ref={ref => {
+              input = ref;
+            }}
+            placeholder="your name"
+          />
+          <div>
+            <NameButton>Enter</NameButton>
+          </div>
+        </form>
+      </NameDiv>
+    ) : (
+      <ChannelDiv>
+        <ChannelList />
+        <Chats
+          sendMessage={this.sendMessage}
+          username={username}
+          chats={chats}
+        />
+        <UserList />
+      </ChannelDiv>
+    );
+  }
+}
 
 const NameButton = styled.button`
   width: 10vh;
   height: 5vh;
   margin-top: 5vh;
+  border-radius: 10px;
 `;
 
 const NameInput = styled.input`

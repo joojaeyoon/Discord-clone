@@ -1,5 +1,6 @@
 .Scroll {
-  height: 550px;
+  height: 75vh;
+  text-align: left;
 }
 
 ::-webkit-scrollbar {

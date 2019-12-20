@@ -1,80 +1,46 @@
 import React from "react";
 import styled from "styled-components";
-import socket from "socket.io-client";
 import ScrollToBottom from "react-scroll-to-bottom";
 
+import Message from "./Message";
 import "./Chats.css";
 
-const Chat = ({ username, chats }) => {
-  return chats.map((chat, index) => (
-    <div key={index}>
-      {username}: {chat}
-    </div>
-  ));
+const Chats = props => {
+  let input;
+
+  const { sendMessage, username, chats } = props;
+
+  return (
+    <MainDiv>
+      <ChatMenu>Chat Menu</ChatMenu>
+      <InnerDiv>
+        <ChatDiv>
+          <ScrollToBottom className="Scroll">
+            <Message messages={chats} />
+          </ScrollToBottom>
+        </ChatDiv>
+
+        <ChatForm
+          onSubmit={e => {
+            e.preventDefault();
+            sendMessage(username, input.value);
+            input.value = "";
+          }}
+        >
+          <ChatInput
+            ref={ref => {
+              input = ref;
+            }}
+            placeholder="Send Message"
+          />
+        </ChatForm>
+      </InnerDiv>
+    </MainDiv>
+  );
 };
 
-class Chats extends React.Component {
-  state = {
-    chats: []
-  };
-
-  constructor(props) {
-    super(props);
-
-    const { username } = this.props;
-
-    this.socket = socket.connect("http://localhost:8080");
-
-    this.socket.emit("username", username);
-
-    this.socket.on("message", (user, msg) => {
-      this.addMessage(user, msg);
-      console.log(this.state.chats);
-    });
-  }
-
-  addMessage = msg => {
-    const { chats } = this.state;
-    this.setState({
-      chats: [...chats, msg]
-    });
-  };
-
-  render() {
-    let input;
-    const { username } = this.props;
-
-    return (
-      <MainDiv>
-        <ChatMenu>Chat Menu</ChatMenu>
-        <InnerDiv>
-          <ChatDiv>
-            <ScrollToBottom className="Scroll">
-              <Chat username={username} chats={this.state.chats} />
-            </ScrollToBottom>
-          </ChatDiv>
-          <ChatForm
-            onSubmit={e => {
-              e.preventDefault();
-              this.socket.emit("message", input.value);
-              input.value = "";
-            }}
-          >
-            <ChatInput
-              ref={ref => {
-                input = ref;
-              }}
-              placeholder="Send Message"
-            />
-          </ChatForm>
-        </InnerDiv>
-      </MainDiv>
-    );
-  }
-}
-
 const ChatForm = styled.form`
-  height: 10%;
+  height: 8vh;
 `;
 
 const ChatInput = styled.input`
@@ -98,14 +64,14 @@ const ChatMenu = styled.div`
   border-bottom-style: solid;
   border-width: 1px;
   border-color: black;
-  width: 100%;
-  min-height: 8%;
+  min-height: 10vh;
 `;
 
 const InnerDiv = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 90%;
+  min-height: 90vh;
+  margin-top: 10px;
 `;
 
 const MainDiv = styled.div`

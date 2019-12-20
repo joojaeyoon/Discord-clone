@@ -25,6 +25,7 @@ const Div = styled.div`
 const UserMessage = styled.div`
   text-indent: 60px;
   font-size: 18px;
+  color: #dcddde;
 `;
 
 const DateTime = styled.span`
@@ -34,7 +35,7 @@ const DateTime = styled.span`
 `;
 
 const UserName = styled.span`
-  color: #2ec057;
+  color: white;
   font-size: 18px;
 `;
 

@@ -5,7 +5,6 @@ const ChannelList = () => {
   return (
     <ChannelDiv>
       <ChatChannelDiv># 자유채팅1</ChatChannelDiv>
-      <ChatChannelDiv># 자유채팅2</ChatChannelDiv>
       <ChatChannelDiv>
         <span role="img" aria-label="speaker">
           🔊
@@ -33,7 +32,7 @@ const UserDiv = styled.div`
   font-weight: 600;
   position: absolute;
   bottom: 0;
-  height: 50px;
+  height: 10vh;
   width: 100%;
 `;
 
@@ -48,6 +47,7 @@ const ChannelDiv = styled.div`
   color: white;
   min-width: 13%;
   padding-top: 10vh;
+  border-top-left-radius: 10px;
 `;
 
 export default ChannelList;

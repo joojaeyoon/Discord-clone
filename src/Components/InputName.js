@@ -50,6 +50,7 @@ const NameDiv = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
+  border-top-left-radius: 15px;
 `;
 
 export default InputName;

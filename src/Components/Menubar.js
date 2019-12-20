@@ -35,6 +35,7 @@ const MenubarDiv = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
 const MenulineDiv = styled.div`
   font-weight: 500;
   font-size: 30px;

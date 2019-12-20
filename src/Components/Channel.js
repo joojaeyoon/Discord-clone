@@ -5,11 +5,12 @@ import socket from "socket.io-client";
 import Chats from "./Chats";
 import ChannelList from "./ChannelList";
 import UserList from "./UserList";
+import InputName from "./InputName";
 
 class Channel extends React.Component {
   state = {
     users: [],
-    chats: [{ user: "joo", text: "test" }],
+    chats: [],
     username: ""
   };
 
@@ -20,6 +21,24 @@ class Channel extends React.Component {
 
     this.socket.on("message", (user, msg, date) => {
       this.addMessage(user, msg, date);
+    });
+
+    this.socket.on("addUser", user => {
+      this.addUser(user);
+    });
+
+    this.socket.on("user disconnect", username => {
+      this.delUser(username);
+    });
+
+    this.socket.on("getUsers", users => {
+      const userList = this.state.users;
+
+      users.map(user => userList.push(user));
+
+      this.setState({
+        users: userList
+      });
     });
   }
 
@@ -41,33 +60,37 @@ class Channel extends React.Component {
     this.setState({
       username: name
     });
-    this.socket.emit("username", name);
+    this.socket.emit("enter user", name);
+
+    this.addUser(name);
+  };
+
+  addUser = user => {
+    const { users } = this.state;
+    this.setState({
+      users: [...users, user]
+    });
+  };
+
+  delUser = name => {
+    const userList = this.state.users;
+    const idx = userList.indexOf(name);
+    if (idx === -1) {
+      return;
+    }
+
+    userList.splice(idx, 1);
+
+    this.setState({
+      users: userList
+    });
   };
 
   render() {
-    let input;
-    const { username, chats } = this.state;
+    const { username, chats, users } = this.state;
 
     return username === "" ? (
-      <NameDiv>
-        <div style={{ margin: "5vh" }}>Enter Channel</div>
-        <form
-          onSubmit={e => {
-            e.preventDefault();
-            this.setUsername(input.value);
-          }}
-        >
-          <NameInput
-            ref={ref => {
-              input = ref;
-            }}
-            placeholder="your name"
-          />
-          <div>
-            <NameButton>Enter</NameButton>
-          </div>
-        </form>
-      </NameDiv>
+      <InputName setUsername={this.setUsername} />
     ) : (
       <ChannelDiv>
         <ChannelList />
@@ -76,34 +99,11 @@ class Channel extends React.Component {
           username={username}
           chats={chats}
         />
-        <UserList />
+        <UserList users={users} />
       </ChannelDiv>
     );
   }
 }
-
-const NameButton = styled.button`
-  width: 10vh;
-  height: 5vh;
-  margin-top: 5vh;
-  border-radius: 10px;
-`;
-
-const NameInput = styled.input`
-  height: 5vh;
-  text-indent: 1vh;
-`;
-
-const NameDiv = styled.div`
-  background-color: #36393f;
-  width: 100%;
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  color: white;
-`;
 
 const ChannelDiv = styled.div`
   display: flex;

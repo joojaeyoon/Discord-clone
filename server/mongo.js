@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
-const uri =
-  "mongodb+srv://wow1548:rpxhfpdl1@chatcluster-nskgv.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const uri = "your uri";
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 

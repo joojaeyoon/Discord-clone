@@ -63,8 +63,8 @@ const ChatDiv = styled.div`
 const ChatMenu = styled.div`
   border-bottom-style: solid;
   border-width: 1px;
-  border-color: black;
-  min-height: 10vh;
+  border-color: #232527;
+  min-height: 50px;
 `;
 
 const InnerDiv = styled.div`

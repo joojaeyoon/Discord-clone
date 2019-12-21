@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>socket test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font: 13px Helvetica, Arial;
+        display: flex;
+        flex-direction: row;
+      }
+      form {
+        background: #000;
+        padding: 3px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      form input {
+        border: 0;
+        padding: 10px;
+        width: 90%;
+        margin-right: 0.5%;
+      }
+      form button {
+        width: 9%;
+        background: #fff;
+        border: none;
+        padding: 10px;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 90%;
+      }
+      #messages li {
+        padding: 5px 10px;
+      }
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+      #messages {
+        margin-bottom: 40px;
+      }
+      #users {
+        background-color: #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="messages">
+      ChatRoom
+    </div>
+    <div>
+      접속자
+      <span id="UserCount"></span>
+      <div id="users"></div>
+    </div>
+    <form>
+      <input id="ChatInput" placeholder="Send Message" />
+      <button>Send</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(function() {
+        var socket = io();
+        var user = "Joo";
+
+        socket.emit("connected", user);
+
+        socket.on("user disconnect", users => {
+          $("#users").empty();
+          for (var i = 0; i < users.length; i++)
+            $("#users").append($("<li>").text(users[i]));
+        });
+
+        $("form").submit(function(e) {
+          e.preventDefault(); // prevents page reloading
+          socket.emit("chat message", user + ": " + $("#ChatInput").val());
+          $("#ChatInput").val("");
+          return false;
+        });
+
+        socket.on("chat message", (user, msg) => {
+          $("#messages").append($("<li>").text(user + ": " + msg));
+        });
+
+        socket.on("connected", users => {
+          $("#users").empty();
+          for (var i = 0; i < users.length; i++)
+            $("#users").append($("<li>").text(users[i]));
+        });
+
+        socket.on("user change", count => {
+          $("#UserCount").text(count + "명");
+        });
+      });
+    </script>
+  </body>
+</html>

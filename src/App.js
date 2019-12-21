@@ -8,9 +8,7 @@ import Channel from "./Components/Channel";
 import Menubar from "./Components/Menubar";
 
 function App() {
-  const [electron] = useState(window.require("electron"));
-
-  console.log(electron);
+  //const [electron]=useState(window.require('electron'))
   useEffect(() => {
     document.body.style.overflow = "hidden";
   }, []);
@@ -19,7 +17,7 @@ function App() {
     <div>
       <div className="titlebar">
         <img className="title" src={title} alt="title" />
-        <AppMenu electron={electron} />
+        {/*<AppMenu electron={electron} />*/}
       </div>
       <div className="App">
         <Menubar />

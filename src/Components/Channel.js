@@ -11,6 +11,7 @@ class Channel extends React.Component {
   state = {
     users: [],
     chats: [],
+    voiceroom: [],
     username: ""
   };
 
@@ -19,8 +20,8 @@ class Channel extends React.Component {
 
     this.socket = socket.connect("http://localhost:8080");
 
-    this.socket.on("message", (user, msg, date) => {
-      this.addMessage(user, msg, date);
+    this.socket.on("message", chat => {
+      this.addMessage(chat);
     });
 
     this.socket.on("addUser", user => {
@@ -29,6 +30,12 @@ class Channel extends React.Component {
 
     this.socket.on("user disconnect", username => {
       this.delUser(username);
+    });
+
+    this.socket.on("voice", users => {
+      this.setState({
+        voiceroom: users
+      });
     });
 
     this.socket.on("getUsers", users => {
@@ -42,18 +49,30 @@ class Channel extends React.Component {
     });
   }
 
-  addMessage = (user, msg, date) => {
+  joinRoom = room => {
+    this.socket.emit("join", room);
+  };
+
+  leaveRoom = room => {
+    this.socket.emit("leave", room);
+  };
+
+  addMessage = chat => {
     const { chats } = this.state;
     this.setState({
-      chats: [...chats, { user: user, text: msg, date: date }]
+      chats: [
+        ...chats,
+        {
+          user: chat.user,
+          text: chat.text,
+          date: chat.date
+        }
+      ]
     });
   };
 
   sendMessage = (user, msg) => {
-    const date = Date();
     this.socket.emit("message", user, msg);
-
-    this.addMessage(user, msg, date);
   };
 
   setUsername = name => {
@@ -87,13 +106,18 @@ class Channel extends React.Component {
   };
 
   render() {
-    const { username, chats, users } = this.state;
+    const { username, chats, users, voiceroom } = this.state;
 
     return username === "" ? (
       <InputName setUsername={this.setUsername} />
     ) : (
       <ChannelDiv>
-        <ChannelList />
+        <ChannelList
+          joinRoom={this.joinRoom}
+          leaveRoom={this.leaveRoom}
+          username={username}
+          voiceroom={voiceroom}
+        />
         <Chats
           sendMessage={this.sendMessage}
           username={username}

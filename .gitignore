@@ -6,6 +6,7 @@
 /build
 /dist
 .pnp.js
+/server/node_modules
 
 # testing
 /coverage

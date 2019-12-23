@@ -10,6 +10,8 @@
     "electron-is-dev": "^1.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-mic": "^12.4.1",
+    "react-player": "^1.14.2",
     "react-scripts": "3.3.0",
     "react-scroll-to-bottom": "^2.0.0-master.f19b14d",
     "socket.io": "^2.3.0"

@@ -32,7 +32,7 @@ class Channel extends React.Component {
       this.delUser(username);
     });
 
-    this.socket.on("voice", users => {
+    this.socket.on("voiceUsers", users => {
       this.setState({
         voiceroom: users
       });
@@ -47,7 +47,18 @@ class Channel extends React.Component {
         users: userList
       });
     });
+
+    this.socket.on("sendVoice", data => {
+      const blob = new Blob([data]);
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.play();
+    });
   }
+
+  sendBlob = blob => {
+    this.socket.emit("sendBlob", blob);
+  };
 
   joinRoom = room => {
     this.socket.emit("join", room);
@@ -117,6 +128,7 @@ class Channel extends React.Component {
           leaveRoom={this.leaveRoom}
           username={username}
           voiceroom={voiceroom}
+          sendBlob={this.sendBlob}
         />
         <Chats
           sendMessage={this.sendMessage}

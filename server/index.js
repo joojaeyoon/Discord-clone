@@ -50,12 +50,18 @@ io.on("connection", socket => {
 
   socket.on("join", room => {
     voice.push(socket.username);
-    io.emit("voice", voice);
+    socket.join(room);
+    io.emit("voiceUsers", voice);
   });
 
   socket.on("leave", room => {
     voice.splice(voice.indexOf(socket.username), 1);
-    io.emit("voice", voice);
+    socket.leave(room);
+    io.emit("voiceUsers", voice);
+  });
+
+  socket.on("sendBlob", blob => {
+    socket.broadcast.to("Voice").emit("sendVoice", blob);
   });
 
   socket.on("disconnect", () => {

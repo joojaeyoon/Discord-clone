@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { Mic } from "./mic";
 
 import logo from "./imgs/discord-logo.png";
 
 const ChannelList = props => {
-  const { username, joinRoom, leaveRoom, voiceroom } = props;
+  const { username, joinRoom, leaveRoom, voiceroom, sendBlob } = props;
   const [isJoined, setJoined] = useState(false);
 
   const users = voiceroom.map((user, index) => (
@@ -41,6 +42,7 @@ const ChannelList = props => {
         </ChannelButton>
         {users}
       </ChatChannelDiv>
+      <Mic sendBlob={sendBlob} />
       <UserDiv>
         <img
           src={logo}

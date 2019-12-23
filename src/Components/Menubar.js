@@ -4,7 +4,6 @@ import logo from "../discord-logo.png";
 import react_logo from "./imgs/react.png";
 import socket_logo from "./imgs/socket.png";
 import mongo_logo from "./imgs/mongo.png";
-import graphql_logo from "./imgs/graphql.png";
 
 const Menubar = () => {
   return (
@@ -14,7 +13,6 @@ const Menubar = () => {
       <Image src={react_logo} alt="react_logo" />
       <Image src={socket_logo} alt="socket.io_logo" />
       <Image src={mongo_logo} alt="mongo_logo" />
-      <Image src={graphql_logo} alt="graphql_logo" />
     </MenubarDiv>
   );
 };

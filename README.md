@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Discord Clone using ReactJS, Socket.io and MongoDB
+Discord Clone using ReactJS, Electron, Socket.io and MongoDB
 
 ![img](./public/main.png)
 

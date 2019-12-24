@@ -31,7 +31,6 @@ export const Mic = props => {
         width={30}
         height={20}
       />
-      <audio controls="controls" src={blobURL}></audio>
       <button
         onClick={() => setRecord(!record)}
         style={{

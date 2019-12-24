@@ -21,6 +21,7 @@ io.on("connection", socket => {
   console.info("SOME ONE IS HERE");
   if (users.length !== 0) socket.emit("getUsers", users);
   socket.emit("voice", voice);
+  socket.emit("voiceUsers", voice);
 
   socket.on("enter user", username => {
     socket.username = username;

@@ -12,7 +12,7 @@ const Chats = props => {
 
   return (
     <MainDiv>
-      <ChatMenu>Chat Menu</ChatMenu>
+      <ChatMenu></ChatMenu>
       <InnerDiv>
         <ChatDiv>
           <ScrollToBottom className="Scroll">

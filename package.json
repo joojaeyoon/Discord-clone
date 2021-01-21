@@ -14,7 +14,7 @@
     "react-player": "^1.14.2",
     "react-scripts": "3.3.0",
     "react-scroll-to-bottom": "^2.0.0-master.f19b14d",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   },
   "scripts": {
     "react-start": "react-scripts start",
